@@ -181,7 +181,7 @@ wsServer.on('request', function(request) {
               machines_connected[idx] = {client_id: index, info: machine};
             });
 
-            redis.set('machines', machines_connected);
+            redis.set('machines', JSON.stringify(machines_connected));
 
           break;
           default:
