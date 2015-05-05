@@ -4,9 +4,10 @@ var url = require("url")
 var _ = require('underscore');
 var Redis = require('ioredis');
 
+var sub = new Redis('redis://:JPFhQpvwxzSwsnJwfIHaoPgMxZJxFKO@10.29.0.67:6379');
 var redis = new Redis('redis://:JPFhQpvwxzSwsnJwfIHaoPgMxZJxFKO@10.29.0.67:6379');
 
-redis.subscribe('commands', function (err, count) {});
+sub.subscribe('commands', function (err, count) {});
 
 redis.on('message', function (channel, message) {
   console.log('Receive message %s from channel %s', message, channel);
