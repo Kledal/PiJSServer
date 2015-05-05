@@ -6,6 +6,12 @@ var Redis = require('ioredis');
 
 var redis = new Redis('redis://:JPFhQpvwxzSwsnJwfIHaoPgMxZJxFKO@10.29.0.67:6379');
 
+redis.subscribe('commands', function (err, count) {});
+
+redis.on('message', function (channel, message) {
+  console.log('Receive message %s from channel %s', message, channel);
+});
+
 var machines_connected = {};
 var clients = [];
 
@@ -51,20 +57,6 @@ var server = http.createServer(function(request, response) {
         var machine = machines_connected[uuid];
         var c_id = machine.client_id;
         var c_connection = clients[c_id];
-
-
-        // c_connection.sendUTF( JSON.stringify(
-        //   [ ['update_routines', {
-        //     data: {
-        //       uuid: uuid,
-        //       routines: {
-        //         // cancel_print: ["G1 X9.114 Y9.070 Z10.000 F1500 A634.71744; Retract\nM18 A B(Turn off A and B Steppers)\nG1 Z155 F900\nG162 X Y F2000\nM18 X Y Z(Turn off steppers after a build)\nM109 S0 T0\nM104 S0 T0\nM73 P100 (end  build progress )\nM70 P5 (We <3 Making Things!)\nM72 P1  ( Play Ta-Da song )\nM137 (build end notification)"],
-        //         // \nG4 P0\nM70 P4 (Cancelling...)\nG28 X0\nM104 S0\nM84\nM70 P4 (Print cancelled)
-        //         // start_print: ["M109 S130"]
-        //       }
-        //     }
-        //   }]]));
-
 
         var output = JSON.stringify([ ["run_job",
           {
@@ -142,7 +134,6 @@ wsServer.on('request', function(request) {
         }
 
         switch(header) {
-
           case "server.machine_connected":
             var uuid = payload.uuid;
             var exists = machines_connected[uuid] !== undefined;
@@ -188,10 +179,9 @@ wsServer.on('request', function(request) {
             _.each(payload.machines, function(machine, idx) {
               machines_connected[idx] = {client_id: index, info: machine};
             });
-            // console.log(machines_connected);
-            // var uuid = keys[0];
-            // var port_name = serial_map[keys[0]];
-            // var output = JSON.stringify([ ["machine_info", {data: {uuid: uuid, port_name: port_name} }] ]);
+
+            redis.set('machines', machines_connected);
+
           break;
           default:
             console.log(payload);
