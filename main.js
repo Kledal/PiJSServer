@@ -148,11 +148,12 @@ wsServer.on('request', function(request) {
             var exists = machines_connected[uuid] !== undefined;
             if (!exists) { return; }
             machines_connected = _.reject(machines_connected, function(machine, idx) { return idx == uuid; });
+            if (machines_connected.length == 0) {
+              machines_connected = {};
+            }
           break;
 
           case "server.update_data":
-            // console.log(payload);
-
             var machine_uuid_connected = payload.uuid_map;
             var serial_map = payload.iserial_map;
 
