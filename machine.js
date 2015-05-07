@@ -5,6 +5,7 @@ function Machine(uuid) {
   this.client_id;
   this.info;
   this.lastSeen = new Date();
+  this.frame;
 }
 
 Machine.prototype = {
@@ -18,6 +19,9 @@ Machine.prototype = {
   },
   printFile: function() {
 
+  },
+  frame: function(frame) {
+    this.frame = frame;
   }
 };
 

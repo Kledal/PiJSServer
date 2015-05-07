@@ -140,6 +140,15 @@ wsServer.on('request', function(request) {
         }
 
         switch(header) {
+          case "server.camera_frame":
+            var uuid = payload.uuid;
+            var frame = payload.frame;
+            var machine = misc.getMachineByUUID(machines, uuid);
+            if (machine === undefined) { return; }
+
+            machine.frame(frame);
+
+          break;
           case "server.machine_connected":
             var uuid = payload.uuid;
             var machine = misc.getMachineByUUID(machines, uuid);
