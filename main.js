@@ -137,16 +137,16 @@ wsServer.on('request', function(request) {
         switch(header) {
           case "server.machine_connected":
             var uuid = payload.uuid;
-            var exists = misc.getMachineByUUID(uuid) !== undefined;
+            var exists = misc.getMachineByUUID(machines, uuid) !== undefined;
             if (!exists) { return; }
             machines.push(new Machine(uuid));
           break;
 
           case "server.machine_disconnected":
             var uuid = payload.uuid;
-            var machine = misc.getMachineByUUID(uuid);
+            var machine = misc.getMachineByUUID(machines, uuid);
             if (machine === undefined) { return; }
-            misc.removeMachineByUUID(machine.uuid);
+            misc.removeMachineByUUID(machines, machine.uuid);
           break;
 
           case "server.update_data":
@@ -157,7 +157,7 @@ wsServer.on('request', function(request) {
 
             var machines_not_connected = {};
             _.each(uuids, function(uuid) {
-              var exists = misc.getMachineByUUID(uuid) !== undefined;
+              var exists = misc.getMachineByUUID(machines, uuid) !== undefined;
               if (!exists) {
                 machines_not_connected[uuid] = {
                   protocol: JSON.stringify({protocol: 'x3g', x3g_settings: x3g_settings}),
@@ -173,7 +173,7 @@ wsServer.on('request', function(request) {
             }
 
             _.each(payload.machines, function(machine, uuid) {
-              var machine = misc.getMachineByUUID(uuid).update(index, machine);
+              var machine = misc.getMachineByUUID(machines, uuid).update(index, machine);
             });
 
             redis.set('machines', JSON.stringify(machines_connected));
