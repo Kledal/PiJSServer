@@ -118,16 +118,12 @@ wsServer.on('request', function(request) {
     var connection = request.accept(null, request.origin);
     var index = clients.push(connection) - 1;
 
-    // This is the most important callback for us, we'll handle
-    // all messages from users here.
     console.log("Connection accepted");
     connection.on('message', function(message) {
       if (message.type === 'utf8') {
-        // console.log("Message: " + JSON.stringify(message) );
         var msg = JSON.parse(message.utf8Data);
-        var payload = msg[1].data;
-
         var header = msg[0];
+        var payload = msg[1].data;
 
         if (header != 'server.update_data') {
           console.log("id: " + msg[1].id);
