@@ -137,10 +137,10 @@ wsServer.on('request', function(request) {
         switch(header) {
           case "server.machine_connected":
             var uuid = payload.uuid;
-            var exists = misc.getMachineByUUID(machines, uuid) !== undefined;
-            if (!exists) { return; }
-            console.log("Machine " + uuid + " is not created.");
-            machines.push(new Machine(uuid));
+            var machine = misc.getMachineByUUID(machines, uuid);
+            if (machine === undefined) { return; }
+            console.log("Machine " + uuid + " is now connected");
+            machine.connected = true;
           break;
 
           case "server.machine_disconnected":
@@ -164,7 +164,7 @@ wsServer.on('request', function(request) {
                   protocol: JSON.stringify({protocol: 'x3g', x3g_settings: x3g_settings}),
                   uuid: uuid, baud: "115200"
                 }
-                
+
                 console.log("Machine " + uuid + " is not created.");
                 machines.push(new Machine(uuid));
               }

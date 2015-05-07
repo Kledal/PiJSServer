@@ -1,6 +1,7 @@
 function Machine(uuid) {
   this.uuid = uuid;
 
+  this.connected = false;
   this.client_id;
   this.info;
 }
