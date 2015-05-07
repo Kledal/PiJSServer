@@ -42,6 +42,7 @@ var server = http.createServer(function(request, response) {
         var uuid = "55330343434351D072C1";
         var machine = misc.getMachineByUUID(machines, uuid);
         var cam = _.find(cameras, function(cam) { return cam.client_id === machine.client_id; });
+        if (cam === undefined) { return; }
         cam.request_frame(clients);
 
         response.writeHead(200, {"Content-Type": "text/plain"});
