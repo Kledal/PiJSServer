@@ -139,6 +139,7 @@ wsServer.on('request', function(request) {
             var uuid = payload.uuid;
             var exists = misc.getMachineByUUID(machines, uuid) !== undefined;
             if (!exists) { return; }
+            console.log("Machine " + uuid + " is not created.");
             machines.push(new Machine(uuid));
           break;
 
