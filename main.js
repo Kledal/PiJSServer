@@ -34,7 +34,7 @@ var server = http.createServer(function(request, response) {
       break;
       case '/cams':
         response.writeHead(200, {"Content-Type": "text/plain"});
-        response.write(JSON.stringify(cams));
+        response.write(JSON.stringify(cameras));
         response.end();
       break;
 
