@@ -164,7 +164,8 @@ wsServer.on('request', function(request) {
                   protocol: JSON.stringify({protocol: 'x3g', x3g_settings: x3g_settings}),
                   uuid: uuid, baud: "115200"
                 }
-
+                
+                console.log("Machine " + uuid + " is not created.");
                 machines.push(new Machine(uuid));
               }
             });
