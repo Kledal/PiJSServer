@@ -1,7 +1,7 @@
 function Machine(uuid) {
   this.uuid = uuid;
 
-  this.connected = false;
+  this.isConnected = false;
   this.client_id;
   this.info;
 }
@@ -12,7 +12,7 @@ Machine.prototype = {
     this.info = info;
   },
   connected: function() {
-    this.connected = true;
+    this.isConnected = true;
   }
 };
 
