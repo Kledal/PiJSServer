@@ -9,7 +9,8 @@ module.exports = {
     return _.reject(machines, function(machine) {
       return machine.uuid === uuid;
     });
-  }
+  },
+  
   removeMachinesByClientId = function(machines, client_id) {
     return _.reject(machines, function(machine) {
       return machine.client_id === client_id;
