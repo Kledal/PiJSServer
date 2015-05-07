@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var misc = require('./helpers.js');
-
 var Machine = require('./machine.js');
+var Camera = require('./camera.js');
 var WebSocketServer = require('websocket').server;
 var http = require('http');
 var url = require("url")
@@ -20,6 +20,7 @@ var machines_connected = {};
 var clients = [];
 
 var machines = [];
+var cameras = [];
 
 var server = http.createServer(function(request, response) {
     var uri = url.parse(request.url).pathname;
@@ -31,13 +32,17 @@ var server = http.createServer(function(request, response) {
         response.write(JSON.stringify(machines));
         response.end();
       break;
+      case '/cams':
+        response.writeHead(200, {"Content-Type": "text/plain"});
+        response.write(JSON.stringify(cams));
+        response.end();
+      break;
 
       case '/send_cmd':
         var uuid = "55330343434351D072C1";
         var machine = misc.getMachineByUUID(machines, uuid);
-        var c_connection = clients[machine.client_id];
-
-        c_connection.sendUTF( JSON.stringify([ ["ready_for_next_frame", { data: {} }] ]) );
+        var cam = _.find(cameras, function(cam) { return cam.client_id === machine.client_id; });
+        cam.request_frame(clients);
 
         response.writeHead(200, {"Content-Type": "text/plain"});
         response.write(JSON.stringify(machines));
@@ -127,6 +132,8 @@ var x3g_settings = {
 wsServer.on('request', function(request) {
     var connection = request.accept(null, request.origin);
     var index = clients.push(connection) - 1;
+    var camera = new Camera(index);
+    var camera_index = camera.push(camera);
 
     console.log("Connection accepted");
     connection.on('message', function(message) {
@@ -141,14 +148,9 @@ wsServer.on('request', function(request) {
 
         switch(header) {
           case "server.camera_frame":
-            var uuid = payload.uuid;
             var frame = payload.frame;
-            var machine = misc.getMachineByUUID(machines, uuid);
-            if (machine === undefined) { return; }
-
-            console.log(uuid + " received a frame");
-
-            machine.frame(frame);
+            console.log("Received a frame from client: " + index);
+            camera.save_frame(frame);
 
           break;
           case "server.machine_connected":
@@ -207,5 +209,6 @@ wsServer.on('request', function(request) {
       machines = misc.removeMachinesByClientId(machines, index);
       console.log("Connection closed");
       clients.splice(index, 1);
+      cameras.splice(camera_index, 1);
     });
 });
