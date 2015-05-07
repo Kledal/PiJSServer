@@ -125,7 +125,6 @@ wsServer.on('request', function(request) {
 
     console.log("Connection accepted");
     connection.on('message', function(message) {
-      console.log(message);
       if (message.type === 'utf8') {
         var msg = JSON.parse(message.utf8Data);
         var header = msg[0];
