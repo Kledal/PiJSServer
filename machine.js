@@ -5,6 +5,7 @@ function Machine(uuid) {
   this.client_id;
   this.info;
   this.lastSeen = new Date();
+  this.lastSeen.setTimeZone('Europe/Copenhagen');
 }
 
 Machine.prototype = {
