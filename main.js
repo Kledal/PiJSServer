@@ -28,7 +28,7 @@ var server = http.createServer(function(request, response) {
     switch(uri) {
       case '/':
         response.writeHead(200, {"Content-Type": "text/plain"});
-        response.write(JSON.stringify(machines_connected));
+        response.write(JSON.stringify(machines));
         response.end();
       break;
 
