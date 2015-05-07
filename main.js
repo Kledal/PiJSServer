@@ -38,6 +38,10 @@ var server = http.createServer(function(request, response) {
         var c_connection = clients[machine.client_id];
 
         c_connection.sendUTF( JSON.stringify([ ["ready_for_next_frame", { data: {} }] ]) );
+
+        response.writeHead(200, {"Content-Type": "text/plain"});
+        response.write(JSON.stringify(machines));
+        response.end();
       break;
 
       case '/cancel_print':
