@@ -140,7 +140,7 @@ wsServer.on('request', function(request) {
             var machine = misc.getMachineByUUID(machines, uuid);
             if (machine === undefined) { return; }
             console.log("Machine " + uuid + " is now connected");
-            machine.connected = true;
+            machine.connected();
           break;
 
           case "server.machine_disconnected":
