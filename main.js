@@ -1,3 +1,6 @@
+var misc = require('./helpers.js');
+
+var Machine = require('./machine.js');
 var WebSocketServer = require('websocket').server;
 var http = require('http');
 var url = require("url")
@@ -15,6 +18,8 @@ redis.on('message', function (channel, message) {
 
 var machines_connected = {};
 var clients = [];
+
+var machines = [];
 
 var server = http.createServer(function(request, response) {
     var uri = url.parse(request.url).pathname;
@@ -126,27 +131,22 @@ wsServer.on('request', function(request) {
         var payload = msg[1].data;
 
         if (header != 'server.update_data') {
-          console.log("id: " + msg[1].id);
           console.log("Msg header: " + header);
         }
 
         switch(header) {
           case "server.machine_connected":
             var uuid = payload.uuid;
-            var exists = machines_connected[uuid] !== undefined;
-            console.log("Machine is connected?: " + exists);
+            var exists = misc.getMachineByUUID(uuid) !== undefined;
             if (!exists) { return; }
-            machines_connected[uuid] = {};
+            machines.push(new Machine(uuid));
           break;
 
           case "server.machine_disconnected":
             var uuid = payload.uuid;
-            var exists = machines_connected[uuid] !== undefined;
-            if (!exists) { return; }
-            machines_connected = _.reject(machines_connected, function(machine, idx) { return idx == uuid; });
-            if (machines_connected.length == 0) {
-              machines_connected = {};
-            }
+            var machine = misc.getMachineByUUID(uuid);
+            if (machine === undefined) { return; }
+            misc.removeMachineByUUID(machine.uuid);
           break;
 
           case "server.update_data":
@@ -154,32 +154,29 @@ wsServer.on('request', function(request) {
             var serial_map = payload.iserial_map;
 
             var uuids = _.keys(serial_map);
+
             var machines_not_connected = {};
-            _.each(uuids, function(key) {
-              var exists = machines_connected[key] !== undefined;
+            _.each(uuids, function(uuid) {
+              var exists = misc.getMachineByUUID(uuid) !== undefined;
               if (!exists) {
-                machines_not_connected[key] = {
+                machines_not_connected[uuid] = {
                   protocol: JSON.stringify({protocol: 'x3g', x3g_settings: x3g_settings}),
-                  uuid: key,
-                  baud: "115200"
+                  uuid: uuid, baud: "115200"
                 }
-                machines_connected[key] = {};
+
+                machines.push(new Machine(uuid));
               }
             });
 
             if (_.size(machines_not_connected) > 0) {
-              console.log("Send connect machines");
-              var output = JSON.stringify([ ["connect_machines", {data: machines_not_connected}] ]);
-              console.log(">>" + output);
-              connection.sendUTF( output );
+              connection.sendUTF( JSON.stringify([ ["connect_machines", { data: machines_not_connected }] ]) );
             }
 
-            _.each(payload.machines, function(machine, idx) {
-              machines_connected[idx] = {client_id: index, info: machine};
+            _.each(payload.machines, function(machine, uuid) {
+              var machine = misc.getMachineByUUID(uuid).update(index, machine);
             });
 
             redis.set('machines', JSON.stringify(machines_connected));
-
           break;
           default:
             console.log(payload);
