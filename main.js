@@ -34,9 +34,8 @@ var server = http.createServer(function(request, response) {
 
       case '/send_cmd':
         var uuid = "55330343434351D072C1";
-        var machine = machines_connected[uuid];
-        var c_id = machine.client_id;
-        var c_connection = clients[c_id];
+        var machine = misc.getMachineByUUID(uuid);
+        var c_connection = clients[machine.client_id];
 
         c_connection.sendUTF( JSON.stringify([ ["ready_for_next_frame", { data: {} }] ]) );
       break;
