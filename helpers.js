@@ -1,3 +1,4 @@
+var _ = require('underscore');
 module.exports = {
   getMachineByUUID: function(uuid) {
     return _.find(machines, function(machine) {
