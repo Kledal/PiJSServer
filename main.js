@@ -146,6 +146,8 @@ wsServer.on('request', function(request) {
             var machine = misc.getMachineByUUID(machines, uuid);
             if (machine === undefined) { return; }
 
+            console.log(uuid + " received a frame");
+
             machine.frame(frame);
 
           break;
