@@ -13,6 +13,9 @@ Machine.prototype = {
   },
   connected: function() {
     this.isConnected = true;
+  },
+  printFile: function() {
+    
   }
 };
 

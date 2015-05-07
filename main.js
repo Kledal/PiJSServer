@@ -178,7 +178,7 @@ wsServer.on('request', function(request) {
               var machine = misc.getMachineByUUID(machines, uuid).update(index, machine);
             });
 
-            redis.set('machines', JSON.stringify(machines_connected));
+            redis.set('machines', JSON.stringify(machines));
           break;
           default:
             console.log(payload);
