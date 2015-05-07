@@ -188,8 +188,8 @@ wsServer.on('request', function(request) {
     });
 
     connection.on('close', function(connection) {
+      misc.removeMachinesByClientId(machines, index);
       console.log("Connection closed");
-      machines_connected = {};
       clients.splice(index, 1);
     });
 });
