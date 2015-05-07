@@ -1,10 +1,10 @@
+var _ = require('underscore');
 var misc = require('./helpers.js');
 
 var Machine = require('./machine.js');
 var WebSocketServer = require('websocket').server;
 var http = require('http');
 var url = require("url")
-var _ = require('underscore');
 var Redis = require('ioredis');
 
 var sub = new Redis('redis://:JPFhQpvwxzSwsnJwfIHaoPgMxZJxFKO@10.29.0.67:6379');
