@@ -6,7 +6,7 @@ module.exports = {
     });
   },
   removeMachineByUUID: function(machines, uuid) {
-    machines = _.reject(machines, function(machine) {
+    return _.reject(machines, function(machine) {
       return machine.uuid === uuid;
     });
   }

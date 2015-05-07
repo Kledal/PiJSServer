@@ -146,7 +146,7 @@ wsServer.on('request', function(request) {
             var uuid = payload.uuid;
             var machine = misc.getMachineByUUID(machines, uuid);
             if (machine === undefined) { return; }
-            misc.removeMachineByUUID(machines, machine.uuid);
+            machines = misc.removeMachineByUUID(machines, machine.uuid);
           break;
 
           case "server.update_data":
