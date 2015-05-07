@@ -133,7 +133,7 @@ wsServer.on('request', function(request) {
     var connection = request.accept(null, request.origin);
     var index = clients.push(connection) - 1;
     var camera = new Camera(index);
-    var camera_index = cameras.push(camera);
+    var camera_index = cameras.push(camera) - 1;
 
     console.log("Connection accepted");
     connection.on('message', function(message) {
