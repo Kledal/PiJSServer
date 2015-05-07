@@ -37,6 +37,8 @@ var server = http.createServer(function(request, response) {
         var machine = machines_connected[uuid];
         var c_id = machine.client_id;
         var c_connection = clients[c_id];
+
+        c_connection.sendUTF( JSON.stringify([ ["ready_for_next_frame", { data: {} }] ]) );
       break;
 
       case '/cancel_print':
