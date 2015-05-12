@@ -53,7 +53,7 @@ var server = http.createServer(function(request, response) {
       break;
 
       case '/cancel_print':
-        var uuid = "55330343434351D072C1";
+        var uuid = params['uuid'] || "55330343434351D072C1";
 
         var machine = misc.getMachineByUUID(machines, uuid);
 
