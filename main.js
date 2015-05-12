@@ -82,6 +82,10 @@ var server = http.createServer(function(request, response) {
 
         console.log("Starting print");
 
+        if (machine === undefined) {
+          console.log("Machine not found..")
+        }
+
         if (machine !== undefined) {
           var c_id = machine.client_id;
           var c_connection = clients[c_id];
