@@ -212,6 +212,7 @@ wsServer.on('request', function(request) {
             }
 
             _.each(payload.machines, function(machine, uuid) {
+              camera.uuid = uuid;
               var machine = misc.getMachineByUUID(machines, uuid).update(index, machine);
             });
 
