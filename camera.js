@@ -1,5 +1,6 @@
 function Camera(client_id) {
   this.client_id = client_id;
+  this.uuid;
   this.lastFrame;
 }
 
