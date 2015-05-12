@@ -75,7 +75,7 @@ var server = http.createServer(function(request, response) {
       break;
 
       case '/start_print':
-        var uuid = params['url'] || "55330343434351D072C1";
+        var uuid = params['uuid'] || "55330343434351D072C1";
         var path = params['url'] || "http://data01.gratisupload.dk/f/8rge1r24h9.gcode";
 
         var machine = misc.getMachineByUUID(machines, uuid);
