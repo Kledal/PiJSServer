@@ -80,6 +80,8 @@ var server = http.createServer(function(request, response) {
 
         var machine = misc.getMachineByUUID(machines, uuid);
 
+        console.log("Starting print");
+
         if (machine !== undefined) {
           var c_id = machine.client_id;
           var c_connection = clients[c_id];
