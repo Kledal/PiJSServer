@@ -213,8 +213,9 @@ wsServer.on('request', function(request) {
 
             _.each(payload.machines, function(machine, uuid) {
               camera.uuid = uuid;
-              camera.request_frame(clients);
               var machine = misc.getMachineByUUID(machines, uuid).update(index, machine);
+
+              camera.request_frame(clients);
             });
 
             redis.set('machines', JSON.stringify(machines));
