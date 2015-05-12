@@ -39,7 +39,7 @@ var server = http.createServer(function(request, response) {
       break;
 
       case '/send_cmd':
-        var uuid = "55330343434351D072C1";
+        var uuid = params['uuid'] || "55330343434351D072C1";
         var machine = misc.getMachineByUUID(machines, uuid);
         if (machine !== undefined) {
           var cam = _.find(cameras, function(cam) { return cam.client_id === machine.client_id; });
@@ -168,6 +168,8 @@ wsServer.on('request', function(request) {
             var frame = payload.frame;
             console.log("Received a frame from client: " + index);
             camera.save_frame(frame);
+
+            redis.set('cams', JSON.stringify(cameras));
 
           break;
           case "server.machine_connected":
