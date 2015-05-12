@@ -41,9 +41,11 @@ var server = http.createServer(function(request, response) {
       case '/send_cmd':
         var uuid = "55330343434351D072C1";
         var machine = misc.getMachineByUUID(machines, uuid);
-        var cam = _.find(cameras, function(cam) { return cam.client_id === machine.client_id; });
-        if (cam === undefined) { return; }
-        cam.request_frame(clients);
+        if (machine !== undefined) {
+          var cam = _.find(cameras, function(cam) { return cam.client_id === machine.client_id; });
+          if (cam === undefined) { return; }
+          cam.request_frame(clients);
+        }
 
         response.writeHead(200, {"Content-Type": "text/plain"});
         response.write(JSON.stringify(machines));
@@ -52,16 +54,20 @@ var server = http.createServer(function(request, response) {
 
       case '/cancel_print':
         var uuid = "55330343434351D072C1";
-        var machine = machines_connected[uuid];
-        var c_id = machine.client_id;
-        var c_connection = clients[c_id];
-        var output = JSON.stringify([ ["cancel_print",
-          {
-            data: {
-                uuid: uuid,
-            }
-          }] ]);
-          c_connection.sendUTF( output );
+
+        var machine = misc.getMachineByUUID(machines, uuid);
+
+        if (machine !== undefined) {
+          var c_id = machine.client_id;
+          var c_connection = clients[c_id];
+          var output = JSON.stringify([ ["cancel_print",
+            {
+              data: {
+                  uuid: uuid,
+              }
+            }] ]);
+            c_connection.sendUTF( output );
+          }
 
           response.writeHead(200, {"Content-Type": "text/plain"});
           response.write(JSON.stringify(machines_connected));
@@ -71,19 +77,23 @@ var server = http.createServer(function(request, response) {
       case '/start_print':
         var uuid = "55330343434351D072C1";
         var path = params['url'] || "http://data01.gratisupload.dk/f/8rge1r24h9.gcode";
-        var machine = machines_connected[uuid];
-        var c_id = machine.client_id;
-        var c_connection = clients[c_id];
 
-        var output = JSON.stringify([ ["run_job",
-          {
-            data: {
-                uuid: uuid,
-                job_id: 1,
-                gcode_url: path
-            }
-          }] ]);
-          c_connection.sendUTF( output );
+        var machine = misc.getMachineByUUID(machines, uuid);
+
+        if (machine !== undefined) {
+          var c_id = machine.client_id;
+          var c_connection = clients[c_id];
+
+          var output = JSON.stringify([ ["run_job",
+            {
+              data: {
+                  uuid: uuid,
+                  job_id: 1,
+                  gcode_url: path
+              }
+            }] ]);
+            c_connection.sendUTF( output );
+          }
 
           response.writeHead(200, {"Content-Type": "text/plain"});
           response.write(JSON.stringify(machines_connected));
