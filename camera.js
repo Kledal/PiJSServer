@@ -14,6 +14,7 @@ Camera.prototype = {
     if (new Date().getTime() > this.next_update) {
       connections[this.client_id].sendUTF( JSON.stringify([ ["ready_for_next_frame", { data: {} }] ]) );
       this.next_update = new Date().getTime() + this.requestTime;
+      console.log("Requested frame. Next update: " + this.next_update);
     }
   }
 };
