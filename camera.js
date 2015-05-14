@@ -2,7 +2,7 @@ function Camera(client_id) {
   this.client_id = client_id;
   this.uuid = null;
   this.lastFrame;
-  this.requestTime = 5;
+  this.requestTime = 5000;
   this.next_update = new Date().getTime() + this.requestTime;
 }
 
