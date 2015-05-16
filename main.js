@@ -22,7 +22,7 @@ sub.on('message', function (channel, message) {
 
   switch (command.name) {
     case "cancel_print":
-      machine.cancel_print();
+      machine.cancel_print(clients);
     break;
   }
 
@@ -174,7 +174,6 @@ wsServer.on('request', function(request) {
             var uuid = payload.uuid;
             var machine = misc.getMachineByUUID(machines, uuid);
             if (machine === undefined) { return; }
-            machine.connection = connection;
             console.log("Machine " + uuid + " is now connected");
             machine.connected();
           break;

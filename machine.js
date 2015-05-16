@@ -3,7 +3,6 @@ function Machine(uuid) {
 
   this.isConnected = false;
   this.client_id;
-  this.connection;
   this.info;
   this.lastSeen = new Date();
 }
@@ -20,9 +19,9 @@ Machine.prototype = {
   printFile: function() {
 
   },
-  cancel_print: function() {
+  cancel_print: function(clients) {
     var output = JSON.stringify([ ["cancel_print", { data: { uuid: uuid, } }] ]);
-    this.connection.sendUTF( output );
+    clients[this.client_id].sendUTF( output );
   }
 };
 
