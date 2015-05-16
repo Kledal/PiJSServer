@@ -12,7 +12,7 @@ var redis = new Redis('redis://:JPFhQpvwxzSwsnJwfIHaoPgMxZJxFKO@10.29.0.67:6379'
 
 sub.subscribe('commands', function (err, count) {});
 
-redis.on('message', function (channel, message) {
+sub.on('message', function (channel, message) {
   console.log('Receive message %s from channel %s', message, channel);
 });
 
