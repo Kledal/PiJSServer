@@ -14,6 +14,18 @@ sub.subscribe('commands', function (err, count) {});
 
 sub.on('message', function (channel, message) {
   console.log('Receive message %s from channel %s', message, channel);
+
+  var command = JSON.parse(message);
+  if (command.info.uuid === undefined) return;
+
+  var machine = misc.getMachineByUUID(machines, command.info.uuid);
+
+  switch (command.name) {
+    case "cancel_print":
+      machine.cancel_print();
+    break;
+  }
+
 });
 
 var machines_connected = {};
@@ -35,20 +47,6 @@ var server = http.createServer(function(request, response) {
       case '/cams':
         response.writeHead(200, {"Content-Type": "text/plain"});
         response.write(JSON.stringify(cameras));
-        response.end();
-      break;
-
-      case '/send_cmd':
-        var uuid = params['uuid'] || "55330343434351D072C1";
-        var machine = misc.getMachineByUUID(machines, uuid);
-        if (machine !== undefined) {
-          var cam = _.find(cameras, function(cam) { return cam.client_id === machine.client_id; });
-          if (cam === undefined) { return; }
-          cam.request_frame(clients);
-        }
-
-        response.writeHead(200, {"Content-Type": "text/plain"});
-        response.write(JSON.stringify(machines));
         response.end();
       break;
 
@@ -176,6 +174,7 @@ wsServer.on('request', function(request) {
             var uuid = payload.uuid;
             var machine = misc.getMachineByUUID(machines, uuid);
             if (machine === undefined) { return; }
+            machine.connection = connection;
             console.log("Machine " + uuid + " is now connected");
             machine.connected();
           break;
