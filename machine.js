@@ -20,8 +20,19 @@ Machine.prototype = {
 
   },
   cancel_print: function(clients) {
-    var output = JSON.stringify([ ["cancel_print", { data: { uuid: uuid, } }] ]);
+    var output = JSON.stringify([ ["cancel_print", { data: { uuid: this.uuid, } }] ]);
     clients[this.client_id].sendUTF( output );
+  },
+  start_print: function(clients, job_id, file_path) {
+    var output = JSON.stringify([ ["run_job",
+      {
+        data: {
+            uuid: this.uuid,
+            job_id: job_id,
+            gcode_url: file_path
+        }
+      }] ]);
+      clients[this.client_id].sendUTF( output );
   }
 };
 

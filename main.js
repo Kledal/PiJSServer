@@ -24,6 +24,10 @@ sub.on('message', function (channel, message) {
     case "cancel_print":
       machine.cancel_print(clients);
     break;
+    case "start_booking":
+      machine.start_print(client, command.info.booking_id, command.info.file);
+
+    break;
   }
 
 });
@@ -48,60 +52,6 @@ var server = http.createServer(function(request, response) {
         response.writeHead(200, {"Content-Type": "text/plain"});
         response.write(JSON.stringify(cameras));
         response.end();
-      break;
-
-      case '/cancel_print':
-        var uuid = params['uuid'] || "55330343434351D072C1";
-
-        var machine = misc.getMachineByUUID(machines, uuid);
-
-        if (machine !== undefined) {
-          var c_id = machine.client_id;
-          var c_connection = clients[c_id];
-          var output = JSON.stringify([ ["cancel_print",
-            {
-              data: {
-                  uuid: uuid,
-              }
-            }] ]);
-            c_connection.sendUTF( output );
-          }
-
-          response.writeHead(200, {"Content-Type": "text/plain"});
-          response.write(JSON.stringify(machines_connected));
-          response.end();
-      break;
-
-      case '/start_print':
-        var uuid = params['uuid'] || "55330343434351D072C1";
-        var path = params['url'] || "http://data01.gratisupload.dk/f/8rge1r24h9.gcode";
-
-        var machine = misc.getMachineByUUID(machines, uuid);
-
-        console.log("Starting print");
-
-        if (machine === undefined) {
-          console.log("Machine not found..")
-        }
-
-        if (machine !== undefined) {
-          var c_id = machine.client_id;
-          var c_connection = clients[c_id];
-
-          var output = JSON.stringify([ ["run_job",
-            {
-              data: {
-                  uuid: uuid,
-                  job_id: 1,
-                  gcode_url: path
-              }
-            }] ]);
-            c_connection.sendUTF( output );
-          }
-
-          response.writeHead(200, {"Content-Type": "text/plain"});
-          response.write(JSON.stringify(machines_connected));
-          response.end();
       break;
 
       default:
