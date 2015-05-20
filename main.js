@@ -24,8 +24,9 @@ sub.on('message', function (channel, message) {
     case "cancel_print":
       machine.cancel_print(clients);
     break;
+
     case "start_booking":
-      machine.start_print(client, command.info.booking_id, command.info.file);
+      machine.start_print(clients, command.info.booking_id, command.info.file);
 
     break;
   }
